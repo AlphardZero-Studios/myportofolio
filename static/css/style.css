@@ -5,24 +5,24 @@
 }
 
 :root {
-    --ink: #1c1917;
-    --paper: #faf6f0;
-    --accent: #d95d39;
-    --accent-dark: #a8442a;
-    --line: #e3d9c9;
-    --text-muted: #6b6459;
-    --radius: 4px;
+    --ink: #ffffff;
+    --paper: #1E1E1E;
+    --accent: #ff0000;
+    --accent-dark: #ff4040;
+    --line: #000000;
+    --text-muted: #e6e6e6;
+    --radius: 10px;
 }
 
 body {
-    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, "Helvetica", Roboto, Helvetica, Arial, sans-serif;
     color: var(--ink);
     background-color: var(--paper);
     line-height: 1.6;
 }
 
 h1, .brand {
-    font-family: "Space Grotesk", -apple-system, sans-serif;
+    font-family: "Helvetica", -apple-system, sans-serif;
 }
 
 .container {
