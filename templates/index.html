@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alphard Qodaruddin - Portfolio</title>
+    <title>{{ name }} - Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -12,13 +12,10 @@
 <body>
     <header class="site-header">
         <div class="container">
-            <a href="#profile" class="brand">Alphard Qodaruddin</a>
+            <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
             <nav>
-                <a href="#profile">Profile</a>
-                <a href="#projects">Projects</a>
-                <a href="#itchio">Itch.io</a>
-                <a href="#skills">Skills</a>
-                <a href="#experience">Experience</a>
+                <a href="{% url 'main:show_main' %}">Profile</a>
+                <a href="{% url 'main:show_experience' %}">Experience</a>
             </nav>
         </div>
     </header>
@@ -28,22 +25,22 @@
             <div class="container hero-grid">
                 <div class="hero-identity">
                     <p class="hero-kicker">Computer Science &middot; Universitas Indonesia</p>
-                    <h1>ALPHARD QODARUDDIN</h1>
+                    <h1>{{ name }}</h1>
                 </div>
                 <div class="hero-photo">
                     <div class="photo-block"></div>
-                    <img class="avatar" src="/static/img/alphard.jpeg" alt="Photo of Alphard Qodaruddin">
+                    <img class="avatar" src="/static/img/alphard.jpeg" alt="Photo of {{ name }}">
                 </div>
                 <div class="hero-details">
-                    <p class="bio">6 years of experience as an indie video game developer at AlphardZero Studios and an undergraduate Computer Science student at Universitas Indonesia.</p>
+                    <p class="bio">{{ bio }}</p>
                     <dl class="meta-list">
                         <div class="meta-row">
                             <dt>NPM</dt>
-                            <dd>2506632910</dd>
+                            <dd>{{ npm }}</dd>
                         </div>
                         <div class="meta-row">
                             <dt>Program</dt>
-                            <dd>S1 Ilmu Komputer</dd>
+                            <dd>{{ study_program }}</dd>
                         </div>
                     </dl>
                     <div class="social-links">
@@ -148,7 +145,7 @@
                         <div class="timeline-content">
                             <h3>Undergraduate Computer Science Student</h3>
                             <p class="timeline-sub">Universitas Indonesia</p>
-                            <p>Pursuing S1 Ilmu Komputer, focusing on game development, machine learning / computer vision, and cybersecurity.</p>
+                            <p>Pursuing {{ study_program }}, focusing on game development, machine learning / computer vision, and cybersecurity.</p>
                         </div>
                     </div>
                     <div class="timeline-item">
@@ -166,7 +163,7 @@
 
     <footer class="site-footer">
         <div class="container">
-            <p>&copy; 2026 Alphard Qodaruddin. Faculty of Computer Science, Universitas Indonesia.</p>
+            <p>&copy; 2026 {{ name }}. Faculty of Computer Science, Universitas Indonesia.</p>
         </div>
     </footer>
 </body>
