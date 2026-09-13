@@ -1,0 +1,26 @@
+[
+{
+    "model": "main.experience",
+    "pk": "53f6ef87-d395-46d3-96f3-1aa05d97e341",
+    "fields": {
+        "title": "Member of Game Development SIG at RISTEK Fasilkom UI",
+        "description": "Independent student-run organization at the Faculty of Computer Science, Universitas Indonesia focused on science, technology, and digital innovation",
+        "category": "part-time",
+        "thumbnail": null,
+        "started_at": "2026-09-09T16:15:22.160Z",
+        "ended_at": null
+    }
+},
+{
+    "model": "main.experience",
+    "pk": "f39e04b3-89e8-4664-a46c-026770a3a08d",
+    "fields": {
+        "title": "Founder & CEO of AlphardZero Studios",
+        "description": "Indonesian indie game development studio. Crafting unique experiences since 2019.",
+        "category": "self-employed",
+        "thumbnail": null,
+        "started_at": "2026-09-09T16:12:29.258Z",
+        "ended_at": null
+    }
+}
+]
