@@ -39,3 +39,17 @@ Saya menggunakan bantuan AI  (ChatGPT & Gemini) dalam mengerjakan tugas ini HANY
 
 ## AI Disclosure Tugas 2:
 Saya sama sekali TIDAK MENGGUNAKAN AI dalam mengerjakan tugas 2 ini, seluruh hasil kerja yang saya lakukan pada tugas kali ini murni hasil buatan saya sendiri, hanya berbekalkan Tutorial 2. Beberapa hal seperti styling css dan format model saya mengcopy apa yang pernah saya lakukan dari tugas-tugas dan tutorial sebelumnya, yang kemudian saya modifikasi sendiri melalui trial dan error.
+
+### Tugas 3
+1. Menggunakan ModelForm akan jauh lebih efisien karena saya tidak perlu lagi menulis kode HTML berulangkali dan panjang untuk setiap form. ModelForm akan membuatkan kolom input secara otomatis tergantung dengan tipe data yang dipilih, bisa memvalidasi juga apakh inputnya benar atau tidak, dan juga lebih aman dari error pada menyimpan data. Lalu saya harus menggunakan tag {% csrf_token %} untuk setiap form POST demi keamanan website saya, karena tanpa token tersebut, hacker bisa saja mengirimkan data palsu dan mengotak-atik isi database saya.
+2. JSON lebih disukai oleh banyak orang (termasuk saya hehe) karena strukturnya sederhana, mudah dimengerti, berbentuk seperti dictionary dimana ada pasangan key-value, ukurannya lebih kecil, dan lebih cepat diproses juga.
+3. Alurnya seperti ini:
+	1. HTTP Request menggunakan GET ke server
+	2. Mengecek URL mana yang cocok dengan GET tersebut lalu lanjut ke file view yang sesuai
+	3. Fungsi pada view mengambil data dari database yang berupa object QuerySet
+	4. object QuerySet tersebut dikonversi menjadi tipe data yang biasa digunakan python, proses ini disebut serialization
+	5. Data python yang didapatkan kemudian diubah menjadi JSON, kemudian dikirim kembali ke pengguna.
+Mengapa harus serialization: karena format database dan django hasilnya tipe data "spesial" yang kompleks dan butuh di"translate" terlebih dulu menjadi bentuk tipe data yang bisa dibaca python, baru setelah itu python bisa mengubahnya menjadi json.
+
+## AI Disclosure Tugas 3:
+Sama seperti tugas 2, saya sama sekali TIDAK MENGGUNAKAN AI dalam mengerjakan tugas 3 ini, seluruh hasil kerja yang saya lakukan pada tugas kali ini murni hasil buatan saya sendiri, hanya berbekalkan Tutorial 3 dan beberapa website sumber belajar dasar django dari internet. Beberapa hal seperti styling css dan format model saya mengcopy apa yang pernah saya lakukan dari tugas-tugas dan tutorial sebelumnya, yang kemudian saya modifikasi sendiri melalui trial dan error.

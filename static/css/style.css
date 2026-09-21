@@ -361,7 +361,30 @@ h1, .brand, .section-title {
     }
 }
 
-.experience-section {
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.1rem;
+    background-color: var(--accent);
+    color: var(--ink);
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: background-color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: var(--accent-dark);
+    transform: translateY(-1px);
+}
+
+.experience-section,
+.experiences-section {
     padding: 4rem 0;
     border-top: 1px solid var(--line);
 }
@@ -372,31 +395,148 @@ h1, .brand, .section-title {
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+    margin-bottom: 0.8rem;
 }
 
-.experience-section h1 {
+.experience-section h1,
+.experiences-header h1 {
     margin: 0.4rem 0 1.5rem;
-    font-size: 2rem;
+    font-size: clamp(2rem, 4vw, 3rem);
 }
 
-.experience-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+.experiences-header,
+.project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
-.experience-card {
-    padding: 1.25rem;
-    background-color: #000000;
+.experiences-search,
+.project-search {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.75rem;
+}
+
+.experiences-search__input,
+.project-search__input {
+    flex: 1 1 260px;
+    min-width: 0;
+    padding: 0.8rem 1rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background-color: var(--paper-card);
+    color: var(--ink);
+    font: inherit;
+}
+
+.experiences-search__input::placeholder,
+.project-search__input::placeholder {
+    color: #b8b8b8;
+}
+
+.experience-grid,
+.experiences-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+.experience-card,
+.experiences-card {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--paper-card);
     border: 1px solid var(--line);
     border-radius: var(--radius);
+    overflow: hidden;
 }
 
-.experience-category {
+.project-image,
+.experiences-image {
+    display: block;
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-bottom: 1px solid var(--line);
+}
+
+.experience-card h2,
+.experiences-card h2 {
+    margin: 1.25rem 1.25rem 0.5rem;
+    font-size: 1.35rem;
+    line-height: 1.3;
+}
+
+.experience-category,
+.experiences-category {
+    display: inline-block;
+    width: fit-content;
+    margin: 0 1.25rem 0.75rem;
     color: var(--accent-dark);
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 700;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
+}
+
+.experience-description,
+.experiences-description {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin: 0 1.25rem;
+    flex-grow: 1;
+}
+
+.experiences-card-actions,
+.project-card-actions {
+    padding: 1.25rem;
+    margin-top: auto;
+}
+
+.experiences-actions,
+.project-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.experiences-add-button,
+.project-add-button {
+    white-space: nowrap;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    color: var(--text-muted);
+    background-color: var(--paper-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+}
+
+@media (max-width: 768px) {
+    .experiences-header,
+    .project-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .experiences-search,
+    .project-search {
+        flex-direction: column;
+    }
+
+    .experiences-search__input,
+    .project-search__input,
+    .button {
+        width: 100%;
+    }
 }
 
 .experience-card h2 {
@@ -415,7 +555,7 @@ h1, .brand, .section-title {
     font-weight: 600;
 }
 
-/* projects */
+/* project */
 
 .project-header {
     width: 100%;
@@ -623,6 +763,11 @@ h1, .brand, .section-title {
     }
 }
 
+.project-form,
+.experience-form {
+    max-width: 720px;
+}
+
 .form-group {
     margin-bottom: 1.25rem;
 }
@@ -634,12 +779,15 @@ h1, .brand, .section-title {
 }
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
     width: 100%;
     box-sizing: border-box;
     padding: 0.7rem;
-    border: 1px solid var(--accent);
+    border: 1px solid var(--line);
     border-radius: var(--radius);
+    background: var(--paper-card);
+    color: var(--ink);
     font: inherit;
     transition:
         border-color 0.2s ease,
@@ -647,7 +795,8 @@ h1, .brand, .section-title {
 }
 
 .form-group input:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.form-group select:focus {
     outline: 2px solid var(--accent);
     border-color: var(--accent);
 }
@@ -672,6 +821,243 @@ h1, .brand, .section-title {
     text-decoration: none;
 }
 
+.button.button-secondary,
 .button-secondary {
-    background: var(--ink);
+    background: #ffffff !important;
+    color: #111111 !important;
+    border: 1px solid rgba(17, 17, 17, 0.2) !important;
+    box-shadow: none !important;
+}
+
+.button.button-secondary:hover,
+.button-secondary:hover {
+    background: #f3f3f3 !important;
+    color: #111111 !important;
+}
+
+.edit-button {
+    background: #ffffff !important;
+    color: #111111 !important;
+    border: 1px solid rgba(17, 17, 17, 0.2) !important;
+    box-shadow: none !important;
+}
+
+.edit-button:hover {
+    background: #f3f3f3 !important;
+    color: #111111 !important;
+}
+
+/* experiences */
+
+.experiences-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.experiences-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.experiences-grid .experience-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.experiences-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid black;
+    border-radius: var(--radius);
+}
+
+.experiences-header h1 {
+    margin-bottom: 0;
+}
+
+.experiences-add-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.experiences-add-button span {
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.experiences-search {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.experiences-search__input {
+    width: 100%;
+    min-width: 0;
+    padding: 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+}
+
+.experiences-search__input:focus {
+    outline: 2px solid var(--accent);
+    border-color: var(--accent);
+}
+
+.experiences-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 1rem;
+}
+
+.experiences-actions .button {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.experiences-card-actions {
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+}
+
+.hide {
+    display: none !important;
+}
+
+.experiences-actions .experience-status {
+    margin-top: 0;
+}
+
+.experience-delete-modal,
+.experiences-delete-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 1rem;
+    border: 0;
+    background: transparent;
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+}
+
+.experience-delete-modal:popover-open,
+.experiences-delete-modal:popover-open {
+    display: flex;
+}
+
+.experience-delete-modal__backdrop,
+.experiences-delete-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    padding: 0;
+    background: rgba(28, 25, 23, 0.58);
+    cursor: default;
+}
+
+.experience-delete-modal__content,
+.experiences-delete-modal__content {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 480px);
+    padding: 1.5rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 1rem 3rem rgba(28, 25, 23, 0.22);
+}
+
+.experience-delete-modal__content h2,
+.experiences-delete-modal__content h2 {
+    margin: 0 0 0.75rem;
+    font-family:
+        "Space Grotesk",
+        -apple-system,
+        sans-serif;
+    font-size: 1.5rem;
+}
+
+.experience-delete-modal__close,
+.experiences-delete-modal__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.experience-delete-modal__actions,
+.experiences-delete-modal__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.button-danger {
+    background: #b42318;
+}
+
+@media (max-width: 600px) {
+    .experiences-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .experiences-add-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .experiences-search {
+        flex-direction: column;
+    }
+
+    .experiences-search .button {
+        width: 100%;
+    }
+
+    .experiences-delete-modal {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .experiences-delete-modal__content {
+        width: 100%;
+        padding: 1.25rem;
+        border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    .experiences-delete-modal__actions {
+        flex-direction: column-reverse;
+    }
+
+    .experiences-delete-modal__actions .button {
+        width: 100%;
+        text-align: center;
+    }
 }
