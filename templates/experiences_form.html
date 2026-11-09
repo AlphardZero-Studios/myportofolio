@@ -2,7 +2,7 @@
 {% block meta %}
     {% if is_editing %}
         <title>Edit Experience - {{ name }}</title>
-    {% else %}
+    {% else %}git p
         <title>Add Experience - {{ name }}</title>
     {% endif %}
 {% endblock meta %}
@@ -22,15 +22,7 @@
                           class="project-form">
                 {% endif %}
                     {% csrf_token %}
-                    {% for field in form %}
-                        <div class="form-group">
-                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            {{ field }}
-                            {% for error in field.errors %}
-                                <p class="form-error">{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endfor %}
+                    {% include "components/experience_fields.html" %}
                     {% if is_editing %}
                         <button type="submit" class="button">Simpan Perubahan</button>
                     {% else %}

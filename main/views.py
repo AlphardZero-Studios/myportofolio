@@ -11,6 +11,8 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 import datetime
 from django.contrib.auth.decorators import login_required 
 from django.core.exceptions import PermissionDenied       
+from django.views.decorators.csrf import ensure_csrf_cookie
+from main.permissions import can_edit_experience
 
 def show_main(request):
     last_login = request.COOKIES.get('last_login', 'Belum ada sesi login / Cookie tidak ditemukan')
@@ -116,24 +118,20 @@ def toggle_star(request, project_id):
 
     return redirect("main:show_projects")
 
+@ensure_csrf_cookie
 def show_experiences(request):
-    json_response = get_experiences_json(request)
-
-    experiences = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-    experiences = [experience.object for experience in experiences]
-    title_query = request.GET.get("title", "").strip()
-
     context = {
         "name": "Alphard Qodaruddin",
-        "experience_list": experiences,
-        "title_query": title_query,
+        "title_query": request.GET.get("title", "").strip(),
+        "can_edit": can_edit_experience(request.user),
+        "form": ExperienceForm(),
     }
     return render(request, "experiences.html", context)
 
 def create_experiences(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
     form = ExperienceForm(request.POST or None)
 
     if request.method == "POST" and form.is_valid():
@@ -149,8 +147,12 @@ def create_experiences(request):
     return render(request, "experiences_form.html", context)
 
 def update_experience(request, experience_id):
+    if not can_edit_experience(request.user):
+        raise PermissionDenied
+
     experience = get_object_or_404(Experience, pk=experience_id)
-    form = ExperienceForm(request.POST or None, instance=experience)
+    initial = {"link": ""} if experience.link == "text" else None
+    form = ExperienceForm(request.POST or None, instance=experience, initial=initial)
 
     if request.method == "POST" and form.is_valid():
         form.save()
@@ -172,10 +174,15 @@ def get_experiences_json(request):
     if title_query:
         experiences = experiences.filter(title__icontains=title_query)
 
-    experiences_json = serializers.serialize("json", experiences)
+    experiences_json = serializers.serialize("json", experiences, fields=(
+        "title", "position", "description", "link", "skillset", "thumbnail", "started_at", "ended_at",
+    ))
     return HttpResponse(experiences_json, content_type="application/json")
 
 def delete_experiences(request, experience_id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
     experience = get_object_or_404(Experience, pk=experience_id)
 
     if request.method == "POST":

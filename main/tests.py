@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Group, User
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
@@ -49,8 +50,10 @@ class MainTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "experiences.html")
-        self.assertContains(response, self.experience.title)
-        self.assertContains(response, self.experience.description)
+        self.assertContains(response, f'data-api-url="{reverse("api:experience-list")}"')
+        self.assertContains(response, "js/experiences.js")
+        self.assertIn("csrftoken", response.cookies)
+        self.assertNotContains(response, 'id="experience-form"')
         self.assertContains(response, f'href="{reverse("main:show_main")}"')
 
     def test_projects_page(self):
@@ -63,11 +66,11 @@ class MainTest(TestCase):
         self.assertContains(response, "Godot")
         self.assertContains(response, f'href="{reverse("main:show_main")}"')
 
-    def test_empty_experience_page(self):
+    def test_empty_experience_list(self):
         Experience.objects.all().delete()
-        response = self.client.get(reverse("main:show_experiences"))
+        response = self.client.get(reverse("api:experience-list"))
 
-        self.assertContains(response, "Belum ada pengalaman yang ditambahkan.")
+        self.assertEqual(response.json(), [])
 
     def test_empty_projects_page(self):
         Projects.objects.all().delete()
@@ -79,3 +82,21 @@ class MainTest(TestCase):
         self.experience.ended_at = timezone.now()
         self.experience.save()
         self.assertFalse(self.experience.is_ongoing)
+
+    def test_legacy_experience_views_respect_roles(self):
+        create_url = reverse("main:create_experiences")
+        update_url = reverse("main:update_experience", args=[self.experience.id])
+        delete_url = reverse("main:delete_experiences", args=[self.experience.id])
+        member = User.objects.create_user(username="member")
+        editor = User.objects.create_user(username="editor")
+        editor.groups.add(Group.objects.create(name="Editor"))
+        self.client.force_login(member)
+
+        for url in (create_url, update_url, delete_url):
+            self.assertEqual(self.client.post(url).status_code, 403)
+
+        self.client.force_login(editor)
+        self.assertEqual(self.client.get(update_url).status_code, 200)
+        self.assertEqual(self.client.post(create_url).status_code, 403)
+        self.assertEqual(self.client.post(delete_url).status_code, 403)
+        self.assertEqual(Experience.objects.get().title, self.experience.title)

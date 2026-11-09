@@ -1,4 +1,4 @@
-from django.forms import ModelForm, TextInput, Textarea, URLInput
+from django.forms import ModelForm, TextInput, Textarea, URLField, URLInput
 
 from main.models import Projects, Experience
 
@@ -52,6 +52,13 @@ class ProjectForm(ModelForm):
         }
 
 class ExperienceForm(ModelForm):
+    link = URLField(
+        required=False,
+        label="Company URL",
+        assume_scheme="https",
+        widget=URLInput(attrs={"placeholder": "https://example.com"}),
+    )
+
     class Meta:
         model = Experience
         fields = [
@@ -68,7 +75,6 @@ class ExperienceForm(ModelForm):
             "position": "Position",
             "description": "Company Description",
             "skillset": "Used Skillset",
-            "link": "Company URL",
             "thumbnail": "Company Logo URL",
         }
 
@@ -94,11 +100,6 @@ class ExperienceForm(ModelForm):
             "skillset": TextInput(
                 attrs={
                     "placeholder": "Ex: Project Management, Leadership, Communication",
-                }
-            ),
-            "link": URLInput(
-                attrs={
-                    "placeholder": "https://example.com",
                 }
             ),
             "thumbnail": URLInput(
