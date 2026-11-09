@@ -5,7 +5,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 
-from main.models import Project
+from main.models import Projects
 
 
 class ProjectAPITest(APITestCase):
@@ -14,7 +14,7 @@ class ProjectAPITest(APITestCase):
             username="owner", password="test-password", email="owner@example.com",
         )
         self.visitor = User.objects.create_user(username="visitor", password="test-password")
-        self.project = Project.objects.create(
+        self.project = Projects.objects.create(
             title="Portfolio", description="My website", tech_stack="Django",
         )
         self.list_url = reverse("api:project-list")
@@ -22,7 +22,7 @@ class ProjectAPITest(APITestCase):
         self.star_url = reverse("api:project-star", args=[self.project.id])
         self.payload = {
             "title": "New project", "description": "A useful app", "tech_stack": "Python",
-            "project_url": "https://example.com/", "project_image_url": "",
+            "link": "https://example.com/", "thumbnail": "",
         }
 
     def test_public_list_and_detail(self):
@@ -49,7 +49,7 @@ class ProjectAPITest(APITestCase):
             self.assertEqual(self.client.post(self.list_url, self.payload, format="json").status_code, 403)
             self.assertEqual(self.client.patch(self.detail_url, {"title": "Changed"}, format="json").status_code, 403)
             self.assertEqual(self.client.delete(self.detail_url).status_code, 403)
-        self.assertEqual(Project.objects.count(), 1)
+        self.assertEqual(Projects.objects.count(), 1)
         self.project.refresh_from_db()
         self.assertEqual(self.project.title, "Portfolio")
 
@@ -57,19 +57,19 @@ class ProjectAPITest(APITestCase):
         self.client.force_authenticate(user=self.owner)
         response = self.client.post(self.list_url, self.payload, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(Project.objects.filter(pk=response.data["id"]).exists())
+        self.assertTrue(Projects.objects.filter(pk=response.data["id"]).exists())
 
     def test_validation(self):
         self.client.force_authenticate(user=self.owner)
         for changes, field in [
             ({"title": "   "}, "title"),
             ({"title": '<img src="x" onerror="alert(1)">'}, "title"),
-            ({"project_url": "javascript:alert(1)"}, "project_url"),
+            ({"link": "javascript:alert(1)"}, "link"),
         ]:
             response = self.client.post(self.list_url, {**self.payload, **changes}, format="json")
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
             self.assertIn(field, response.data)
-        self.assertEqual(Project.objects.count(), 1)
+        self.assertEqual(Projects.objects.count(), 1)
 
     def test_patch_put_and_delete(self):
         self.client.force_authenticate(user=self.owner)
@@ -84,7 +84,7 @@ class ProjectAPITest(APITestCase):
         response = self.client.delete(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(response.content, b"")
-        self.assertFalse(Project.objects.filter(pk=self.project.id).exists())
+        self.assertFalse(Projects.objects.filter(pk=self.project.id).exists())
 
     def test_star_requires_login_and_toggles(self):
         self.assertEqual(self.client.post(self.star_url).status_code, status.HTTP_403_FORBIDDEN)
@@ -123,7 +123,7 @@ class ProjectAPITest(APITestCase):
         self.assertTrue(client.login(username="owner", password="test-password"))
         response = client.post(self.list_url, self.payload, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(Project.objects.count(), 1)
+        self.assertEqual(Projects.objects.count(), 1)
 
     def test_session_write_with_csrf_succeeds(self):
         client = APIClient(enforce_csrf_checks=True)

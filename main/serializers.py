@@ -5,6 +5,7 @@ from main.models import Projects
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    link = serializers.URLField()
     star_count = serializers.SerializerMethodField()
     is_starred = serializers.SerializerMethodField()
     starred_by_names = serializers.SerializerMethodField()

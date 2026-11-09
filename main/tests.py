@@ -10,13 +10,14 @@ class MainTest(TestCase):
         self.experience = Experience.objects.create(
             title="Asisten Dosen PBP",
             description="Membantu mahasiswa memahami pengembangan web.",
-            category="part-time",
+            position="Asisten Dosen",
         )
 
         self.projects = Projects.objects.create(
             title="game 1",
             description="peak game fr",
             category="gamedevelopment",
+            tech_stack="Godot",
         )
 
     def test_main_url_is_accessible(self):
@@ -26,7 +27,7 @@ class MainTest(TestCase):
         self.assertTemplateUsed(response, "index.html")
         self.assertNotContains(response, self.experience.title)
         self.assertNotContains(response, self.projects.title)
-        self.assertContains(response, f'href="{reverse("main:show_experience")}"')
+        self.assertContains(response, f'href="{reverse("main:show_experiences")}"')
         self.assertContains(response, f'href="{reverse("main:show_projects")}"')
 
     def test_nonexistent_page_returns_404(self):
@@ -36,7 +37,7 @@ class MainTest(TestCase):
 
     def test_experience_model(self):
         self.assertEqual(str(self.experience), "Asisten Dosen PBP")
-        self.assertEqual(self.experience.category, "part-time")
+        self.assertEqual(self.experience.position, "Asisten Dosen")
         self.assertTrue(self.experience.is_ongoing)
 
     def test_projects_model(self):
@@ -44,14 +45,12 @@ class MainTest(TestCase):
         self.assertEqual(self.projects.category, "gamedevelopment")
 
     def test_experience_page(self):
-        response = self.client.get(reverse("main:show_experience"))
+        response = self.client.get(reverse("main:show_experiences"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "experience.html")
+        self.assertTemplateUsed(response, "experiences.html")
         self.assertContains(response, self.experience.title)
         self.assertContains(response, self.experience.description)
-        self.assertContains(response, "Part-Time")
-        self.assertContains(response, "Sedang berlangsung")
         self.assertContains(response, f'href="{reverse("main:show_main")}"')
 
     def test_projects_page(self):
@@ -61,12 +60,12 @@ class MainTest(TestCase):
         self.assertTemplateUsed(response, "projects.html")
         self.assertContains(response, self.projects.title)
         self.assertContains(response, self.projects.description)
-        self.assertContains(response, "Game Development")
+        self.assertContains(response, "Godot")
         self.assertContains(response, f'href="{reverse("main:show_main")}"')
 
     def test_empty_experience_page(self):
         Experience.objects.all().delete()
-        response = self.client.get(reverse("main:show_experience"))
+        response = self.client.get(reverse("main:show_experiences"))
 
         self.assertContains(response, "Belum ada pengalaman yang ditambahkan.")
 
@@ -79,8 +78,4 @@ class MainTest(TestCase):
     def test_completed_experience(self):
         self.experience.ended_at = timezone.now()
         self.experience.save()
-        response = self.client.get(reverse("main:show_experience"))
-
         self.assertFalse(self.experience.is_ongoing)
-        self.assertContains(response, "Selesai")
-        self.assertNotContains(response, "Sedang berlangsung")

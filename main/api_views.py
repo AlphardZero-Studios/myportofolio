@@ -36,7 +36,7 @@ def project_list(request):
 @permission_classes([IsPortfolioOwnerOrReadOnly])
 def project_detail(request, project_id):
     project = get_object_or_404(
-        Project.objects.prefetch_related("starred_by"), pk=project_id,
+        Projects.objects.prefetch_related("starred_by"), pk=project_id,
     )
     if request.method in ("GET", "HEAD"):
         serializer = ProjectSerializer(project, context={"request": request})
@@ -58,7 +58,7 @@ def project_detail(request, project_id):
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
 def project_star(request, project_id):
-    project = get_object_or_404(Project, pk=project_id)
+    project = get_object_or_404(Projects, pk=project_id)
     if project.starred_by.filter(pk=request.user.pk).exists():
         project.starred_by.remove(request.user)
     else:
