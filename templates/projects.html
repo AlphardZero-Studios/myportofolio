@@ -31,8 +31,8 @@
                 <div class="experience-grid project-grid">
                     {% for project in project_list %}
                         <article class="experience-card">
-                            {% if project.project_image_url %}
-                                <img src="{{ project.project_image_url }}"
+                            {% if project.thumbnail %}
+                                <img src="{{ project.thumbnail }}"
                                      alt="Gambar {{ project.title }}"
                                      class="project-image">
                             {% endif %}
@@ -41,8 +41,8 @@
                             <p class="experience-description">{{ project.description }}</p>
                             <div class="project-card-actions">
                                 <div class="project-actions">
-                                    {% if project.project_url %}
-                                        <a href="{{ project.project_url }}" class="button">Lihat Project</a>
+                                    {% if project.link|slice:':8' == 'https://' or project.link|slice:':7' == 'http://' %}
+                                        <a href="{{ project.link }}" class="button">Lihat Project</a>
                                     {% endif %}
                                     <a href="{% url 'main:update_project' project.id %}" class="button edit-button">Edit</a>
                                     {% include "components/project_star.html" with project=project %}

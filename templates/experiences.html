@@ -1,23 +1,26 @@
 {% extends "base.html" %}
+{% load static %}
 {% block meta %}
     <title>Experiences - {{ name }}</title>
 {% endblock meta %}
 {% block content %}
     <main>
-        <section class="experience-section" id="experience">
+        <section class="experience-section" id="experience" data-api-url="{% url 'api:experience-list' %}">
             <div class="container">
                 <p class="section-kicker">Karya yang saya bangun</p>
                 <div class="project-header">
                     <h1>Experiences</h1>
-                    <a href="{% url 'main:create_experiences' %}"
-                       class="button project-add-button">
-                        <span aria-hidden="true">+</span>
-                        Tambah Pengalaman
-                    </a>
+                    {% if user.is_superuser %}
+                        <button type="button" class="button project-add-button" id="add-experience">
+                            <span aria-hidden="true">+</span>
+                            Tambah Pengalaman
+                        </button>
+                    {% endif %}
                 </div>
                 <form method="get"
                       action="{% url 'main:show_experiences' %}"
-                      class="project-search">
+                      class="project-search"
+                      id="experience-search">
                     <input type="search"
                            name="title"
                            value="{{ title_query }}"
@@ -26,36 +29,59 @@
                            aria-label="Cari berdasarkan nama pengalaman">
                     <button type="submit" class="button">Cari</button>
                 </form>
-                <div class="experience-grid project-grid">
-                    {% for experiences in experience_list %}
-                        <article class="experience-card">
-                            {% if experiences.experience_image_url %}
-                                <img src="{{ experiences.experience_image_url }}"
-                                     alt="Gambar {{ experiences.title }}"
-                                     class="project-image">
-                            {% endif %}
-                            <h2>{{ experiences.title }}</h2>
-                            <span class="experience-category">{{ experiences.tech_stack }}</span>
-                            <p class="experience-description">{{ experiences.description }}</p>
-                            <div class="project-card-actions">
-                                <div class="project-actions">
-                                    {% if experiences.experience_url %}
-                                        <a href="{{ experiences.experience_url }}" class="button">Lihat Pengalaman</a>
-                                    {% endif %}
-                                    <a href="{% url 'main:update_experience' experiences.id %}" class="button edit-button">Edit</a>
-                                    {% include "components/experience_delete_modal.html" with experience=experiences %}
-                                </div>
-                            </div>
-                        </article>
-                    {% empty %}
-                        {% if title_query %}
-                            <p class="empty-state">Tidak ada pengalaman dengan nama tersebut.</p>
-                        {% else %}
-                            <p class="empty-state">Belum ada pengalaman yang ditambahkan.</p>
-                        {% endif %}
-                    {% endfor %}
+                <div class="experience-grid project-grid" id="experience-list">
+                    <p class="empty-state">Memuat pengalaman...</p>
                 </div>
+                <noscript>Aktifkan JavaScript untuk menampilkan pengalaman.</noscript>
             </div>
+
+            <template id="experience-card">
+                <article class="experience-card">
+                    <img class="project-image hide">
+                    <h2></h2>
+                    <p class="experience-position"></p>
+                    <span class="experience-category"></span>
+                    <p class="experience-description"></p>
+                    <div class="project-card-actions">
+                        <div class="project-actions">
+                            <a class="button experience-link hide">Lihat Pengalaman</a>
+                            {% if can_edit %}
+                                <button type="button" class="button edit-button">Edit</button>
+                            {% endif %}
+                            {% if user.is_authenticated %}
+                                <button type="button" class="button button-star">
+                                    <span aria-hidden="true">★</span>
+                                    <span class="star-label"></span>
+                                    <span class="star-count"></span>
+                                </button>
+                            {% else %}
+                                <span class="star-total">★ <span class="star-count"></span></span>
+                            {% endif %}
+                            {% if user.is_superuser %}
+                                <button type="button" class="button button-danger delete-experience">Hapus Pengalaman</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </article>
+            </template>
+
+            {% if can_edit %}
+                <dialog id="experience-form-dialog" class="experience-dialog" aria-labelledby="experience-form-title">
+                    <h2 id="experience-form-title"></h2>
+                    <form id="experience-form" class="project-form">
+                        {% include "components/experience_fields.html" %}
+                        <div class="experience-delete-modal__actions">
+                            <button type="button" class="button button-secondary" data-close>Batal</button>
+                            <button type="submit" class="button">Simpan</button>
+                        </div>
+                    </form>
+                </dialog>
+            {% endif %}
+            {% if user.is_superuser %}
+                {% include "components/experience_delete_modal.html" %}
+            {% endif %}
+            <div id="experience-toast" class="experience-toast" popover="manual" role="alert"></div>
         </section>
     </main>
+    <script src="{% static 'js/experiences.js' %}" defer></script>
 {% endblock content %}

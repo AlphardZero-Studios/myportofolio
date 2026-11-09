@@ -1083,3 +1083,27 @@ h1, .brand, .section-title {
     background: rgba(255, 255, 255, 0.25);
     font-size: 0.8rem;
 }
+.experience-dialog {
+    width: min(calc(100% - 2rem), 520px);
+    max-height: calc(100% - 2rem);
+    padding: 1.5rem;
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+}
+
+.experience-dialog::backdrop {
+    background: rgba(28, 25, 23, 0.58);
+}
+
+.experience-toast {
+    inset: auto 1rem 1rem auto;
+    max-width: min(28rem, calc(100% - 2rem));
+    margin: 0;
+    padding: 0.8rem 1rem;
+    background: #b42318;
+    color: #fff;
+    border: 0;
+    border-radius: var(--radius);
+}
